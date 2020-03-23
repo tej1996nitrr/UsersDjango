@@ -16,6 +16,13 @@ class CreateCategoryView(generics.ListCreateAPIView):
         serializer.save()
 
 
+class DetailsCategoryView(generics.RetrieveUpdateDestroyAPIView):
+    """This class handles the http GET, PUT and DELETE requests."""
+
+    queryset = CategoryModel.objects.all()
+    serializer_class = CategorySerializer
+
+
 class CreatePostView(generics.ListCreateAPIView):
     """This class defines the create behavior of our rest api."""
     queryset = PostModel.objects.all()
@@ -24,3 +31,10 @@ class CreatePostView(generics.ListCreateAPIView):
     def perform_create(self, serializer):
         """Save the post data when creating a new bucketlist."""
         serializer.save()
+
+
+class DetailsPostView(generics.RetrieveUpdateDestroyAPIView):
+    """This class handles the http GET, PUT and DELETE requests."""
+
+    queryset = PostModel.objects.all()
+    serializer_class = PostSerializer

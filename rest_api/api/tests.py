@@ -72,6 +72,32 @@ class ViewTestCase(TestCase):
         """Test the api has bucket creation capability."""
         self.assertEqual(self.category_response.status_code, status.HTTP_201_CREATED)
 
+    def test_api_can_get_a_category(self):
+        category = CategoryModel.objects.get()
+        response = self.client.get(
+            reverse('category_details',
+                    kwargs={'pk': category.id}), format="json")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertContains(response, category)
+
+    def test_api_can_update_a_category(self):
+        change_category = {'name': 'Computer'}
+        category = CategoryModel.objects.get()
+        res = self.client.put(reverse('category_details', kwargs={'pk': category.id}),
+                              change_category, format='json'
+                              )
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+
+    def test_api_can_delete_bucketlist(self):
+        """Test the api can delete a bucketlist."""
+        category = CategoryModel.objects.get()
+        response = self.client.delete(
+            reverse('category_details', kwargs={'pk': category.id}),
+            format='json',
+            follow=True)
+
+        self.assertEquals(response.status_code, status.HTTP_204_NO_CONTENT)
+
     def test_api_can_create_a_post(self):
         """Test the api has bucket creation capability."""
         self.assertEqual(self.category_response.status_code, status.HTTP_201_CREATED)
