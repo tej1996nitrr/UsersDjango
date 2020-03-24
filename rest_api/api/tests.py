@@ -54,6 +54,7 @@ class ViewTestCase(TestCase):
             self.category_data,
             format="json")
         self.user_instance = User.objects.create_user(username='nerd', email='nerd@gmail.com', password='qwert5678')
+        self.client.force_authenticate(self.user_instance)
         self.category_instance = CategoryModel.objects.first()
         self.title = 'pycharm'
         self.content = 'some url'
@@ -61,7 +62,7 @@ class ViewTestCase(TestCase):
         self.post.category.add(self.category_instance)
         self.post_data = {
 
-            "author": 1,
+            "author": self.user_instance.id,
             "title": "Flask",
             "content": "https://github.com/gitgik/django-rest-api/blob/master/rest_api/tests.py",
             "category": [
@@ -74,7 +75,7 @@ class ViewTestCase(TestCase):
             format="json")
         self.post_data_valid = {
 
-            "author": 1,
+            "author": self.user_instance.id,
             "title": "vscode",
             "content": "some url",
             "category": [
@@ -83,7 +84,7 @@ class ViewTestCase(TestCase):
         }
         self.post_data_invalid = {
 
-            "author": 1,
+            "author": self.user_instance.id,
             "title": "pycharm",
             "content": "some url",
             "category": [
@@ -92,7 +93,7 @@ class ViewTestCase(TestCase):
         }
         self.post_valid_update = {
 
-            "author": 1,
+            "author": self.user_instance.id,
             "title": "pycharm",
             "content": "No Url",
             "category": [
@@ -110,7 +111,7 @@ class ViewTestCase(TestCase):
         }
         self.post_data_invalid2 = {
 
-            "author": 1,
+            "author": self.user_instance.id,
             "title": "",
             "content": "https://github.com/gitgik/django-rest-api/blob/master/rest_api/tests.py",
             "category": [

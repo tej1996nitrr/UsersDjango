@@ -4,6 +4,8 @@ from django.shortcuts import render
 from rest_framework import generics
 from .serializers import CategorySerializer, PostSerializer
 from .models import PostModel, CategoryModel
+from rest_framework import permissions
+from .permissions import IsOwner
 
 
 class CreateCategoryView(generics.ListCreateAPIView):
@@ -27,6 +29,7 @@ class CreatePostView(generics.ListCreateAPIView):
     """This class defines the create behavior of our rest api."""
     queryset = PostModel.objects.all()
     serializer_class = PostSerializer
+    permission_classes = (IsOwner, permissions.IsAuthenticatedOrReadOnly)
 
     def perform_create(self, serializer):
         """Save the post data when creating a new bucketlist."""
@@ -38,3 +41,4 @@ class DetailsPostView(generics.RetrieveUpdateDestroyAPIView):
 
     queryset = PostModel.objects.all()
     serializer_class = PostSerializer
+    permission_classes = (IsOwner,)
