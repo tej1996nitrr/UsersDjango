@@ -153,9 +153,17 @@ class ViewTestCase(TestCase):
                                    content_type='application/json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
+    def test_delete_post(self):
+        response = self.client.delete(
+            reverse('post_details', kwargs={'pk': self.post.id}))
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+    def test_invalid_delete_post(self):
+        response = self.client.delete(
+            reverse('post_details', kwargs={'pk': 300}))
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_api_can_create_a_category(self):
-        """Test the api has bucket creation capability."""
+        """Test the api has category creation capability."""
         self.assertEqual(self.category_response.status_code, status.HTTP_201_CREATED)
 
     def test_api_can_get_a_category(self):
@@ -175,7 +183,7 @@ class ViewTestCase(TestCase):
         self.assertEqual(res.status_code, status.HTTP_200_OK)
 
     def test_api_can_delete_category(self):
-        """Test the api can delete a bucketlist."""
+        """Test the api can delete a category"""
         category = CategoryModel.objects.get()
         response = self.client.delete(
             reverse('category_details', kwargs={'pk': category.id}),
@@ -185,7 +193,7 @@ class ViewTestCase(TestCase):
         self.assertEquals(response.status_code, status.HTTP_204_NO_CONTENT)
 
     def test_api_can_create_a_post(self):
-        """Test the api has bucket creation capability."""
+        """Test the api has category creation capability."""
         self.assertEqual(self.post_response.status_code, status.HTTP_201_CREATED)
 
     def test_api_can_get_a_post(self):
@@ -215,7 +223,7 @@ class ViewTestCase(TestCase):
         self.assertEqual(res.status_code, status.HTTP_200_OK)
 
     def test_api_can_delete_post(self):
-        """Test the api can delete a bucketlist."""
+        """Test the api can delete a Post."""
         post = PostModel.objects.all()[:1].get()
         response = self.client.delete(
             reverse('post_details', kwargs={'pk': post.id}),
@@ -223,4 +231,3 @@ class ViewTestCase(TestCase):
             follow=True)
 
         self.assertEquals(response.status_code, status.HTTP_204_NO_CONTENT)
-
