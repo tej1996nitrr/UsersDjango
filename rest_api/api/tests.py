@@ -232,3 +232,18 @@ class ViewTestCase(TestCase):
             follow=True)
 
         self.assertEquals(response.status_code, status.HTTP_204_NO_CONTENT)
+
+    def test_users_view(self):
+        response = self.client.get(reverse('users'),format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_current_users_view(self):
+        response = self.client.get(reverse('me_user_details'),format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_other_user_view(self):
+        response = self.client.get(reverse('user_details',kwargs={'pk':1}))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+
+
