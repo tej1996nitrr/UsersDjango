@@ -4,8 +4,8 @@ from django.contrib.auth.models import User
 from rest_framework.test import APIClient
 from rest_framework import status
 from django.urls import reverse
-
-
+from .serializers import PostSerializer, CategorySerializer
+import json
 # Create your tests here.
 class CategoryModelTestCase(TestCase):
     def setUp(self) -> None:
@@ -35,7 +35,7 @@ class PostModelTestCase(TestCase):
 
     def test_model_can_create_post(self):
         old_count = PostModel.objects.count()
-        self.post = PostModel.objects.create(author=self.user_instance, title=self.title, content=self.content)
+        self.post = PostModel.objects.create(author=self.user_instance, title=self.title+"2", content=self.content)
         self.post.category.add(self.category_instance)
         self.post.save()
         new_count = PostModel.objects.count()
@@ -53,6 +53,12 @@ class ViewTestCase(TestCase):
             reverse('create_category'),
             self.category_data,
             format="json")
+        self.user_instance = User.objects.create_user(username='nerd', email='nerd@gmail.com', password='qwert5678')
+        self.category_instance = CategoryModel.objects.first()
+        self.title = 'pycharm'
+        self.content = 'some url'
+        self.post = PostModel.objects.create(author=self.user_instance, title=self.title, content=self.content)
+        self.post.category.add(self.category_instance)
         self.post_data = {
 
             "author": 1,
@@ -60,13 +66,93 @@ class ViewTestCase(TestCase):
             "content": "https://github.com/gitgik/django-rest-api/blob/master/rest_api/tests.py",
             "category": [
                 1,
-                2
             ]
         }
         self.post_response = self.client.post(
             reverse('create_posts'),
-            self.category_data,
+            self.post_data,
             format="json")
+        self.post_data_valid = {
+
+            "author": 1,
+            "title": "vscode",
+            "content": "some url",
+            "category": [
+                1,
+            ]
+        }
+        self.post_data_invalid = {
+
+            "author": 1,
+            "title": "pycharm",
+            "content": "some url",
+            "category": [
+                1,
+            ]
+        }
+        self.post_valid_update = {
+
+            "author": 1,
+            "title": "pycharm",
+            "content": "No Url",
+            "category": [
+                1,
+            ]
+        }
+        self.post_invalid_update = {
+
+            "author": "",
+            "title": "pycharm",
+            "content": "No Url",
+            "category": [
+                1,
+            ]
+        }
+        self.post_data_invalid2 = {
+
+            "author": 1,
+            "title": "",
+            "content": "https://github.com/gitgik/django-rest-api/blob/master/rest_api/tests.py",
+            "category": [
+                1,
+            ]
+        }
+
+    def test_create_a_valid_post(self):
+        response = self.client.post(reverse('create_posts'),
+                                    data=json.dumps(self.post_data_valid),
+                                    content_type='application/json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+    def test_an_invalid_post(self):
+        response = self.client.post(reverse('create_posts'),
+                                    data=json.dumps(self.post_data_invalid2),
+                                    content_type='application/json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_get_valid_single_post(self):
+        response = self.client.get(reverse('post_details', kwargs={'pk':self.post.id}))
+        test_post = PostModel.objects.get(pk=self.post.pk)
+        serializer = PostSerializer(test_post)
+        self.assertEqual(response.data,serializer.data)
+        self.assertEqual(response.status_code,status.HTTP_200_OK)
+
+    def test_get_invalid_single_post(self):
+        response  = self.client.get(reverse('post_details',kwargs={'pk':300}))
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_valid_update_post(self):
+        response = self.client.put(reverse('post_details', kwargs={'pk':self.post.id}),
+                                           data=json.dumps(self.post_valid_update),
+                                           content_type= 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_invalid_update_post(self):
+        response = self.client.put(reverse('post_details', kwargs={'pk': self.post.id}),
+                                   data=json.dumps(self.post_invalid_update),
+                                   content_type='application/json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
 
     def test_api_can_create_a_category(self):
         """Test the api has bucket creation capability."""
@@ -88,7 +174,7 @@ class ViewTestCase(TestCase):
                               )
         self.assertEqual(res.status_code, status.HTTP_200_OK)
 
-    def test_api_can_delete_bucketlist(self):
+    def test_api_can_delete_category(self):
         """Test the api can delete a bucketlist."""
         category = CategoryModel.objects.get()
         response = self.client.delete(
@@ -100,4 +186,41 @@ class ViewTestCase(TestCase):
 
     def test_api_can_create_a_post(self):
         """Test the api has bucket creation capability."""
-        self.assertEqual(self.category_response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(self.post_response.status_code, status.HTTP_201_CREATED)
+
+    def test_api_can_get_a_post(self):
+
+        post = PostModel.objects.first()
+        response = self.client.get(
+            reverse('post_details',
+                    kwargs={'pk': post.id}), format="json",follow=True)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertContains(response, post)
+
+    def test_api_can_update_a_post(self):
+        change_post = {
+
+            "author": 1,
+            "title": "Flask2",
+            "content": "https://github.com/gitgik/django-rest-api/blob/master/rest_api/tests.py",
+            "category": [
+                1,
+
+            ]
+        }
+        post = PostModel.objects.first()
+        res = self.client.put(reverse('post_details', kwargs={'pk': post.id}),
+                              change_post, format='json'
+                              )
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+
+    def test_api_can_delete_post(self):
+        """Test the api can delete a bucketlist."""
+        post = PostModel.objects.all()[:1].get()
+        response = self.client.delete(
+            reverse('post_details', kwargs={'pk': post.id}),
+            format='json',
+            follow=True)
+
+        self.assertEquals(response.status_code, status.HTTP_204_NO_CONTENT)
+

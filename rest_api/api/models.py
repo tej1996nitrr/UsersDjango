@@ -15,7 +15,7 @@ class CategoryModel(models.Model):
 
 class PostModel(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
-    title = models.CharField(max_length=50)
+    title = models.CharField(max_length=50, unique=True)
     content = models.TextField()
     created_at = models.DateTimeField(default=timezone.now)
     category = models.ManyToManyField('CategoryModel')
