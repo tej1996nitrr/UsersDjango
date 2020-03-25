@@ -7,7 +7,8 @@ from .serializers import UserRegisterSerializer, UserSerializer
 from django.contrib.auth.models import User
 from rest_framework import permissions
 from rest_framework.authtoken.models import Token
-
+from rest_framework.authentication import TokenAuthentication
+from django.contrib.auth import login as django_login, logout as django_logout
 
 class UserCreate(generics.CreateAPIView):
     queryset = User.objects.all()
@@ -47,3 +48,8 @@ class UserMeView(APIView):
     def get(self, request):
         serializer = UserSerializer(request.user)
         return Response(serializer.data)
+
+class LogoutView(APIView):
+    def get(self, request, format=None):
+        request.user.auth_token.delete()
+        return Response(status=status.HTTP_200_OK)
