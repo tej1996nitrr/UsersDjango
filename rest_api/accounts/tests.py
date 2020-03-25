@@ -3,7 +3,8 @@ from rest_framework.test import APITestCase
 from django.urls import reverse
 from rest_framework import status
 from django.contrib.auth.models import User
-
+from rest_framework.authtoken.models import Token
+import json
 
 class AccountsTest(APITestCase):
 
@@ -24,6 +25,7 @@ class AccountsTest(APITestCase):
         self.assertEqual(response.data['username'], data['username'])
         self.assertEqual(response.data['email'], data['email'])
         self.assertFalse('password' in response.data)
+        self.assertTrue("token" in json.loads(response.content))
 
     def test_create_user_with_short_password(self):
         data = {
@@ -142,14 +144,33 @@ class AccountsTest(APITestCase):
         response = self.client.get(reverse('account-allusers'),format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
+
     def test_current_users_view(self):
-        self.client.force_login(self.test_user)
+        response = self.client.post(reverse('account-login'), {"username": "testuser", "password": "testpassword"})
+        content = json.loads(response.content)
+        self.client.credentials(HTTP_AUTHORIZATION='Token ' + content['token'])
         response = self.client.get(reverse('account-me'),format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_other_user_view(self):
         response = self.client.get(reverse('account-details',kwargs={'pk':1}))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_authentication_without_password(self):
+        response = self.client.post(reverse('account-login'), {"username": "testuser"})
+        self.assertEqual(400, response.status_code)
+
+    def test_authentication_with_wrong_password(self):
+        response = self.client.post(reverse('account-login'), {"username": "testuser", "password": "wrong"})
+        self.assertEqual(400, response.status_code)
+
+    def test_authentication_with_valid_data(self):
+        response = self.client.post(reverse('account-login'), {"username": "testuser", "password": "testpassword"})
+        self.assertEqual(200, response.status_code)
+        self.assertTrue("token" in json.loads(response.content))
+
+
+
 
 
 
