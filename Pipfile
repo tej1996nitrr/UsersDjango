@@ -9,6 +9,9 @@ verify_ssl = true
 django = "*"
 djangorestframework = "*"
 pillow = "*"
+django-rest-auth = "*"
+requests = "*"
+django-allauth = "*"
 
 [requires]
 python_version = "3.7"
