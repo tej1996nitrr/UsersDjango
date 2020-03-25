@@ -6,8 +6,9 @@ from rest_framework import status
 from django.urls import reverse
 from .serializers import PostSerializer, CategorySerializer
 import json
-# Create your tests here.
+
 class CategoryModelTestCase(TestCase):
+    """Tests for Category Model."""
     def setUp(self) -> None:
         self.category_name = 'Ads'
         self.category = CategoryModel(name=self.category_name)
@@ -24,6 +25,7 @@ class CategoryModelTestCase(TestCase):
 
 
 class PostModelTestCase(TestCase):
+    """Tests for Post Model."""
     def setUp(self) -> None:
         self.category_name = 'Ads'
         self.user_instance = User.objects.create_user(username='nerd', email='nerd@gmail.com', password='qwert5678')
@@ -43,10 +45,10 @@ class PostModelTestCase(TestCase):
 
 
 class ViewTestCase(TestCase):
-    """Test suite for the api views."""
+    """Tests api views."""
 
     def setUp(self) -> None:
-        """Define the test client and other test variables."""
+        """Defining the test client and other test variables."""
         self.client = APIClient()
         self.category_data = {'name': 'Science'}
         self.category_response = self.client.post(
@@ -121,18 +123,21 @@ class ViewTestCase(TestCase):
         }
 
     def test_create_a_valid_post(self):
+        """Test for creating a valid post"""
         response = self.client.post(reverse('create_posts'),
                                     data=json.dumps(self.post_data_valid),
                                     content_type='application/json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     def test_an_invalid_post(self):
+        """Test for invalid post details"""
         response = self.client.post(reverse('create_posts'),
                                     data=json.dumps(self.post_data_invalid2),
                                     content_type='application/json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_get_valid_single_post(self):
+        """Test for valid single post details"""
         response = self.client.get(reverse('post_details', kwargs={'pk':self.post.id}))
         test_post = PostModel.objects.get(pk=self.post.pk)
         serializer = PostSerializer(test_post)
@@ -140,27 +145,32 @@ class ViewTestCase(TestCase):
         self.assertEqual(response.status_code,status.HTTP_200_OK)
 
     def test_get_invalid_single_post(self):
+        """Test for invalid single post details"""
         response  = self.client.get(reverse('post_details',kwargs={'pk':300}))
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_valid_update_post(self):
+        """Test for valid update details"""
         response = self.client.put(reverse('post_details', kwargs={'pk':self.post.id}),
                                            data=json.dumps(self.post_valid_update),
                                            content_type= 'application/json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_invalid_update_post(self):
+        """Test for invalid update details"""
         response = self.client.put(reverse('post_details', kwargs={'pk': self.post.id}),
                                    data=json.dumps(self.post_invalid_update),
                                    content_type='application/json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_delete_post(self):
+        """Test for valid delete details"""
         response = self.client.delete(
             reverse('post_details', kwargs={'pk': self.post.id}))
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
     def test_invalid_delete_post(self):
+        """Test for invalid delete details"""
         response = self.client.delete(
             reverse('post_details', kwargs={'pk': 300}))
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
@@ -170,6 +180,7 @@ class ViewTestCase(TestCase):
         self.assertEqual(self.category_response.status_code, status.HTTP_201_CREATED)
 
     def test_api_can_get_a_category(self):
+        """Test the api can get a category w id"""
         category = CategoryModel.objects.get()
         response = self.client.get(
             reverse('category_details',
@@ -178,6 +189,7 @@ class ViewTestCase(TestCase):
         self.assertContains(response, category)
 
     def test_api_can_update_a_category(self):
+        """Test the api can update a category"""
         change_category = {'name': 'Computer'}
         category = CategoryModel.objects.get()
         res = self.client.put(reverse('category_details', kwargs={'pk': category.id}),
@@ -200,7 +212,7 @@ class ViewTestCase(TestCase):
         self.assertEqual(self.post_response.status_code, status.HTTP_201_CREATED)
 
     def test_api_can_get_a_post(self):
-
+        """Test if the api can get a Post w id."""
         post = PostModel.objects.first()
         response = self.client.get(
             reverse('post_details',
@@ -209,6 +221,7 @@ class ViewTestCase(TestCase):
         self.assertContains(response, post)
 
     def test_api_can_update_a_post(self):
+        """Test if the api can update a Post."""
         change_post = {
 
             "author": 1,
@@ -235,17 +248,6 @@ class ViewTestCase(TestCase):
 
         self.assertEquals(response.status_code, status.HTTP_204_NO_CONTENT)
 
-    # def test_users_view(self):
-    #     response = self.client.get(reverse('users'),format='json')
-    #     self.assertEqual(response.status_code, status.HTTP_200_OK)
-    #
-    # def test_current_users_view(self):
-    #     response = self.client.get(reverse('me_user_details'),format='json')
-    #     self.assertEqual(response.status_code, status.HTTP_200_OK)
-    #
-    # def test_other_user_view(self):
-    #     response = self.client.get(reverse('user_details',kwargs={'pk':1}))
-    #     self.assertEqual(response.status_code, status.HTTP_200_OK)
 
 
 

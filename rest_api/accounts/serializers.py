@@ -13,22 +13,18 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         fields =('id','username','email','password','confirm_password')
 
     def validate(self, data):
-        """
-        Checks to be sure that the received password and confirm_password
-        fields are exactly the same
-        """
+        """ validate received password and confirm_password"""
         if data['password'] != data.pop('confirm_password'):
             raise serializers.ValidationError("Passwords do not match")
         return data
 
 class UserSerializer(serializers.ModelSerializer):
-    """A user serializer to aid in authentication and authorization."""
+    """A user serializer for authentication and authorization."""
 
     posts = serializers.PrimaryKeyRelatedField(
         many=True, queryset=PostModel.objects.all())
 
     class Meta:
-        """Map this serializer to the default django user model."""
         model = User
         fields = ('id', 'username', 'posts')
 

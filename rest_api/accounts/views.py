@@ -49,6 +49,7 @@ class UserMeView(APIView):
         serializer = UserSerializer(request.user)
         return Response(serializer.data)
 
+
 class LogoutView(APIView):
     def get(self, request, format=None):
         request.user.auth_token.delete()

@@ -2,6 +2,7 @@ from rest_framework.permissions import BasePermission
 from .models import PostModel
 from rest_framework import permissions
 
+
 class IsOwner(BasePermission):
     """ Custom permission class to allow only  owners to edit them."""
 
