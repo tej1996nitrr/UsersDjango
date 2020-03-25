@@ -14,3 +14,4 @@ class IsOwner(BasePermission):
             return True
         # Write permissions are only allowed to the author of a post
         return obj.author == request.user
+

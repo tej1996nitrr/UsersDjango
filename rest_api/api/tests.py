@@ -73,6 +73,7 @@ class ViewTestCase(TestCase):
             reverse('create_posts'),
             self.post_data,
             format="json")
+
         self.post_data_valid = {
 
             "author": self.user_instance.id,
@@ -158,6 +159,7 @@ class ViewTestCase(TestCase):
         response = self.client.delete(
             reverse('post_details', kwargs={'pk': self.post.id}))
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
     def test_invalid_delete_post(self):
         response = self.client.delete(
             reverse('post_details', kwargs={'pk': 300}))
@@ -233,17 +235,17 @@ class ViewTestCase(TestCase):
 
         self.assertEquals(response.status_code, status.HTTP_204_NO_CONTENT)
 
-    def test_users_view(self):
-        response = self.client.get(reverse('users'),format='json')
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-    def test_current_users_view(self):
-        response = self.client.get(reverse('me_user_details'),format='json')
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-    def test_other_user_view(self):
-        response = self.client.get(reverse('user_details',kwargs={'pk':1}))
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+    # def test_users_view(self):
+    #     response = self.client.get(reverse('users'),format='json')
+    #     self.assertEqual(response.status_code, status.HTTP_200_OK)
+    #
+    # def test_current_users_view(self):
+    #     response = self.client.get(reverse('me_user_details'),format='json')
+    #     self.assertEqual(response.status_code, status.HTTP_200_OK)
+    #
+    # def test_other_user_view(self):
+    #     response = self.client.get(reverse('user_details',kwargs={'pk':1}))
+    #     self.assertEqual(response.status_code, status.HTTP_200_OK)
 
 
 

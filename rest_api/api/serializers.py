@@ -2,7 +2,6 @@ from rest_framework import serializers
 from .models import CategoryModel, PostModel
 from django.contrib.auth.models import User
 
-
 class CategorySerializer(serializers.ModelSerializer):
     """Serializer to map model instance to json format"""
     class Meta:
@@ -19,13 +18,13 @@ class PostSerializer(serializers.ModelSerializer):
         read_only_fields = ('created_at',)
 
 
-class UserSerializer(serializers.ModelSerializer):
-    """A user serializer to aid in authentication and authorization."""
-
-    posts = serializers.PrimaryKeyRelatedField(
-        many=True, queryset=PostModel.objects.all())
-
-    class Meta:
-        """Map this serializer to the default django user model."""
-        model = User
-        fields = ('id', 'username', 'posts')
+# class UserSerializer(serializers.ModelSerializer):
+#     """A user serializer to aid in authentication and authorization."""
+#
+#     posts = serializers.PrimaryKeyRelatedField(
+#         many=True, queryset=PostModel.objects.all())
+#
+#     class Meta:
+#         """Map this serializer to the default django user model."""
+#         model = User
+#         fields = ('id', 'username', 'posts')
