@@ -6,11 +6,12 @@ from rest_auth.views import LoginView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('profiles/', include('accounts.urls')),
+    path('accounts/', include('accounts.urls')),
 
     path('', include('api.urls')),
     path('api-auth/', include('rest_framework.urls')),
     path('api/rest-auth/', include('rest_auth.urls'), name="rest_auth_urls"),
+    path('api/rest-auth/registration/', include('rest_auth.registration.urls'), name="register"),
 
 ]
 

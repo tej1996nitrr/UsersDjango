@@ -37,19 +37,32 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'rest_framework',
+    'django.contrib.sites',
+
     'api',
     'accounts',
+
+    'rest_framework',
     'rest_framework.authtoken',
-    'rest_auth'
+
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'rest_auth',
+    'rest_auth.registration',
 ]
 
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+SITE_ID = 1
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.TokenAuthentication',
     )
 }
+
+# ACCOUNT_EMAIL_VERIFICATION = "none"
+# ACCOUNT_EMAIL_REQUIRED =  True
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

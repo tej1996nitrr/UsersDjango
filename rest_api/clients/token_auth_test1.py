@@ -3,7 +3,7 @@ from django.urls import reverse
 
 
 def client():
-    token_h="Token b237295748a387ec7e534acc9e6491bab807e8d3"
+    token_h="Token 6161aeca01c821e872ea871e2477a419c3f67e1e"
     credentials = {"username": "admin", "password": "admin"}
     # response = requests.post("http://127.0.0.1:8000/api/rest-auth/login/", data=credentials)
     header={"Authorization":token_h}
