@@ -74,7 +74,7 @@ MIDDLEWARE = [
 
 
 ROOT_URLCONF = 'rest_api.urls'
-
+# AUTH_USER_MODEL = 'accounts.Profile'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
