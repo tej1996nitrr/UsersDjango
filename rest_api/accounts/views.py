@@ -8,9 +8,8 @@ from rest_framework import mixins
 from .permissions import IsProfileOwner
 from rest_framework.response import Response
 from rest_framework.views import APIView
-# from django.contrib.auth.models import User
-from django.contrib.auth import get_user_model
-User = get_user_model()
+from django.contrib.auth.models import User
+
 
 class ProfilePicUpdateView(generics.UpdateAPIView):
     serializer_class = ProfilePicSerializer
@@ -27,7 +26,9 @@ class ProfileViewSet(mixins.UpdateModelMixin,
                      viewsets.GenericViewSet):
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
-    permission_classes = (IsAuthenticated,IsProfileOwner)
+    permission_classes = (IsAuthenticatedOrReadOnly,IsProfileOwner)
+
+
 
 class UserViewSet(mixins.UpdateModelMixin,
                      mixins.ListModelMixin,

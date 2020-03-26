@@ -1,6 +1,4 @@
 from django.shortcuts import render
-
-# Create your views here.
 from rest_framework import generics
 from .serializers import CategorySerializer, PostSerializer,ContentSerializer
 from .models import PostModel, CategoryModel,ContentModel
@@ -37,7 +35,7 @@ class CreatePostView(generics.ListCreateAPIView):
 
     def perform_create(self, serializer):
         """Save the post data when creating a new post."""
-        serializer.save()
+        serializer.save(author_id=self.request.user.id)
 
 
 class DetailsPostView(generics.RetrieveUpdateDestroyAPIView):
@@ -45,7 +43,8 @@ class DetailsPostView(generics.RetrieveUpdateDestroyAPIView):
 
     queryset = PostModel.objects.all()
     serializer_class = PostSerializer
-    permission_classes = (IsOwner,)
+    permission_classes = (IsOwner,permissions.IsAuthenticated)
+
 
 class CreateContentView(generics.ListCreateAPIView):
     """This class defines the create behavior of our rest api."""
@@ -54,16 +53,17 @@ class CreateContentView(generics.ListCreateAPIView):
     permission_classes = (IsOwner, permissions.IsAuthenticatedOrReadOnly)
 
     def perform_create(self, serializer):
-        """Save the post data when creating a new content."""
-        serializer.save()
+        """Save the post data when creating a new post."""
+        serializer.save(author=self.request.user.profile)
+
 
 
 class DetailsContentView(generics.RetrieveUpdateDestroyAPIView):
     """This class handles the http GET, PUT and DELETE requests."""
-
     queryset = ContentModel.objects.all()
     serializer_class = ContentSerializer
-    permission_classes = (IsOwner,)
+    permission_classes = (IsOwner,permissions.IsAuthenticatedOrReadOnly)
+
 
 class UserView(generics.ListAPIView):
     """View to list the user queryset."""

@@ -7,6 +7,7 @@ class Profile(models.Model):
     bio = models.CharField(max_length=240, blank=True)
     city = models.CharField(max_length=30, blank=True)
     profile_pic = models.ImageField(null=True, blank=True)
+
     def __str__(self):
         return self.user.username
 

@@ -19,10 +19,12 @@ class PostSerializer(serializers.ModelSerializer):
         read_only_fields = ('created_at',)
 
 class ContentSerializer(serializers.ModelSerializer):
+    # print(serializers.CurrentUserDefault())
     class Meta:
         model = ContentModel
-        fields = ('id', 'author', 'title', 'content', 'created_at', 'category')
-        read_only_fields = ('created_at',)
+        fields = ('id', 'title', 'content', 'created_at', 'category','author')
+        read_only_fields = ('created_at','author')
+
 
 class UserSerializer(serializers.ModelSerializer):
     """A user serializer to aid in authentication and authorization."""
