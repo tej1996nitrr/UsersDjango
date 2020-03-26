@@ -5,11 +5,10 @@ class IsProfileOwner(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
         if request.method in permissions.SAFE_METHODS:
             return True
-        return obj.user==request.user
+        print("req",request.user)
+        print("obj",obj.username)
+
+        return obj.username == request.user
 
 
-class IsProfileStatusOwner(permissions.BasePermission):
-    def has_object_permission(self, request, view, obj):
-        if request.method in permissions.SAFE_METHODS:
-            return True
-        return obj.user_profile == request.user.profile
+

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import CategoryModel, PostModel
+from .models import CategoryModel, PostModel,ContentModel
 from django.contrib.auth.models import User
 
 
@@ -18,6 +18,11 @@ class PostSerializer(serializers.ModelSerializer):
         fields = ('id', 'author', 'title', 'content', 'created_at', 'category')
         read_only_fields = ('created_at',)
 
+class ContentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ContentModel
+        fields = ('id', 'author', 'title', 'content', 'created_at', 'category')
+        read_only_fields = ('created_at',)
 
 class UserSerializer(serializers.ModelSerializer):
     """A user serializer to aid in authentication and authorization."""

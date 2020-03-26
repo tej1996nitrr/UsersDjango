@@ -1,12 +1,16 @@
 from django.shortcuts import render
 from rest_framework.permissions import IsAuthenticated,IsAuthenticatedOrReadOnly
-from .models import Profile,ProfileStatus
-from .serializers import ProfileSerializer,ProfileStatusSerializer,ProfilePicSerializer
+from .models import Profile
+from .serializers import ProfileSerializer,ProfilePicSerializer,UserSerializer
 from rest_framework import generics
 from rest_framework import viewsets
 from rest_framework import mixins
-from .permissions import IsProfileOwner,IsProfileStatusOwner
-
+from .permissions import IsProfileOwner
+from rest_framework.response import Response
+from rest_framework.views import APIView
+# from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
+User = get_user_model()
 
 class ProfilePicUpdateView(generics.UpdateAPIView):
     serializer_class = ProfilePicSerializer
@@ -25,13 +29,17 @@ class ProfileViewSet(mixins.UpdateModelMixin,
     serializer_class = ProfileSerializer
     permission_classes = (IsAuthenticated,IsProfileOwner)
 
+class UserViewSet(mixins.UpdateModelMixin,
+                     mixins.ListModelMixin,
+                     mixins.RetrieveModelMixin,
+                     viewsets.GenericViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = (IsAuthenticated,IsProfileOwner)
 
-class ProfileStatusViewset(viewsets.ModelViewSet):
-    queryset = ProfileStatus.objects.all()
-    serializer_class = ProfileStatusSerializer
-    permission_classes = (IsAuthenticated,IsProfileStatusOwner)
+class MyProfileView(APIView):
 
-    def perform_create(self, serializer):
-        user_profile = self.request.user.profile
-        serializer.save(user_profile = user_profile)
+    def get(self, request):
+        serializer = ProfileSerializer(request.user.profile)
+        return Response(serializer.data)
 

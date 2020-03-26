@@ -2,8 +2,8 @@ from django.shortcuts import render
 
 # Create your views here.
 from rest_framework import generics
-from .serializers import CategorySerializer, PostSerializer
-from .models import PostModel, CategoryModel
+from .serializers import CategorySerializer, PostSerializer,ContentSerializer
+from .models import PostModel, CategoryModel,ContentModel
 from rest_framework import permissions
 from .permissions import IsOwner
 from django.contrib.auth.models import User
@@ -18,7 +18,7 @@ class CreateCategoryView(generics.ListCreateAPIView):
     serializer_class = CategorySerializer
 
     def perform_create(self, serializer):
-        """Save the post data when creating a new bucketlist."""
+        """Save the post data when creating a new cat."""
         serializer.save()
 
 
@@ -36,7 +36,7 @@ class CreatePostView(generics.ListCreateAPIView):
     permission_classes = (IsOwner, permissions.IsAuthenticatedOrReadOnly)
 
     def perform_create(self, serializer):
-        """Save the post data when creating a new bucketlist."""
+        """Save the post data when creating a new post."""
         serializer.save()
 
 
@@ -47,6 +47,23 @@ class DetailsPostView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = PostSerializer
     permission_classes = (IsOwner,)
 
+class CreateContentView(generics.ListCreateAPIView):
+    """This class defines the create behavior of our rest api."""
+    queryset = ContentModel.objects.all()
+    serializer_class = ContentSerializer
+    permission_classes = (IsOwner, permissions.IsAuthenticatedOrReadOnly)
+
+    def perform_create(self, serializer):
+        """Save the post data when creating a new content."""
+        serializer.save()
+
+
+class DetailsContentView(generics.RetrieveUpdateDestroyAPIView):
+    """This class handles the http GET, PUT and DELETE requests."""
+
+    queryset = ContentModel.objects.all()
+    serializer_class = ContentSerializer
+    permission_classes = (IsOwner,)
 
 class UserView(generics.ListAPIView):
     """View to list the user queryset."""

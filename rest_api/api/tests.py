@@ -7,6 +7,7 @@ from django.urls import reverse
 from .serializers import PostSerializer, CategorySerializer
 import json
 # Create your tests here.
+
 class CategoryModelTestCase(TestCase):
     def setUp(self) -> None:
         self.category_name = 'Ads'
