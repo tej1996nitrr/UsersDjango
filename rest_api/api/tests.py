@@ -6,6 +6,7 @@ from rest_framework import status
 from django.urls import reverse
 from .serializers import PostSerializer, CategorySerializer
 import json
+from users.models import CustomUser
 # Create your tests here.
 class CategoryModelTestCase(TestCase):
     def setUp(self) -> None:
