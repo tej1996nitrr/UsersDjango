@@ -51,12 +51,13 @@ class ViewTestCase(TestCase):
         """Define the test client and other test variables."""
         self.client = APIClient()
         self.category_data = {'name': 'Science'}
+
+        self.user_instance = CustomUser.objects.create_user(username='sheldon', email='cooper@gmail.com', password='qwert5678')
+        self.client.force_authenticate(self.user_instance)
         self.category_response = self.client.post(
             reverse('create_category'),
             self.category_data,
             format="json")
-        self.user_instance = CustomUser.objects.create_user(username='sheldon', email='cooper@gmail.com', password='qwert5678')
-        self.client.force_authenticate(self.user_instance)
         self.category_instance = CategoryModel.objects.first()
         self.title = 'big bang theory'
         self.content = 'some bazinga'
@@ -120,8 +121,8 @@ class ViewTestCase(TestCase):
                                            content_type= 'application/json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-    def test_invalid_update_post(self):
-        self.post_invalid_update = {
+    def test_update_post_currentUser(self):
+        self.post_valid_update2 = {
 
             "author": "",
             "title": "maroon5",
@@ -131,9 +132,9 @@ class ViewTestCase(TestCase):
             ]
         }
         response = self.client.put(reverse('post_details', kwargs={'pk': self.post.id}),
-                                   data=json.dumps(self.post_invalid_update),
+                                   data=json.dumps(self.post_valid_update2),
                                    content_type='application/json')
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_delete_post(self):
         response = self.client.delete(
@@ -159,7 +160,7 @@ class ViewTestCase(TestCase):
     def test_api_can_update_a_category(self):
         change_category = {'name': 'Computer'}
         category = CategoryModel.objects.get()
-        res = self.client.put(reverse('category_details', kwargs={'pk': category.id}),
+        res = self.client.put(reverse('category_details', kwargs={'pk': 1}),
                               change_category, format='json'
                               )
         self.assertEqual(res.status_code, status.HTTP_200_OK)
@@ -167,10 +168,10 @@ class ViewTestCase(TestCase):
     def test_api_can_delete_category(self):
         category = CategoryModel.objects.get()
         response = self.client.delete(
-            reverse('category_details', kwargs={'pk': category.id}),
+            reverse('category_details', kwargs={'pk': 1}),
             format='json',
             follow=True)
 
         self.assertEquals(response.status_code, status.HTTP_204_NO_CONTENT)
 
-#
+

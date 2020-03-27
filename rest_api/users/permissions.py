@@ -7,4 +7,4 @@ class IsOwnProfileOrReadOnly(permissions.BasePermission):
         if request.method in permissions.SAFE_METHODS:
             return True
 
-        return str(obj.username)== str(request.user)
+        return str(obj.username) == str(request.user)

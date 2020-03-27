@@ -18,11 +18,12 @@ class CategoryModel(models.Model):
 
 
 class PostModel(models.Model):
-    author = models.ForeignKey('users.CustomUser', on_delete=models.CASCADE, related_name='posts')
+    author = models.ForeignKey('users.CustomUser', on_delete=models.CASCADE, related_name='posts', null=False)
     title = models.CharField(max_length=50, unique=True)
     content = models.TextField()
     created_at = models.DateTimeField(default=timezone.now)
     category = models.ManyToManyField('CategoryModel')
+    # image = models.ImageField(blank=True, null=True)
 
     def __str__(self):
         return self.title

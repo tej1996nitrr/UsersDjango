@@ -15,3 +15,5 @@ class UserSerializer(serializers.ModelSerializer):
         """Map this serializer to the default django user model."""
         model = CustomUser
         fields = ["id","posts","username","email","bio","city","profile_pic","date_of_birth"]
+
+
