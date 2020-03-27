@@ -45,7 +45,7 @@ class PostModelTestCase(TestCase):
 
 
 class ViewTestCase(TestCase):
-    """Test suite for the api views."""
+    """Test  for the api views."""
 
     def setUp(self) -> None:
         """Define the test client and other test variables."""
@@ -63,7 +63,7 @@ class ViewTestCase(TestCase):
         self.content = 'some bazinga'
         self.post = PostModel.objects.create(author=self.user_instance, title=self.title, content=self.content)
         self.post.category.add(self.category_instance)
-
+        self.category_name = CategoryModel.objects.first().name
 
     def test_create_a_valid_post(self):
         self.post_data_valid = {
@@ -72,7 +72,7 @@ class ViewTestCase(TestCase):
             "title": "friends",
             "content": "some url",
             "category": [
-                1,
+                self.category_name,
             ]
         }
         response = self.client.post(reverse('create_posts'),
@@ -87,7 +87,7 @@ class ViewTestCase(TestCase):
             "title": "",
             "content": "https://github.com/gitgik/django-rest-api/blob/master/rest_api/tests.py",
             "category": [
-                1,
+                self.category_name,
             ]
         }
         response = self.client.post(reverse('create_posts'),
@@ -113,7 +113,7 @@ class ViewTestCase(TestCase):
             "title": "coldplay",
             "content": "No Url",
             "category": [
-                1,
+                self.category_name,
             ]
         }
         response = self.client.put(reverse('post_details', kwargs={'pk':self.post.id}),
@@ -122,13 +122,14 @@ class ViewTestCase(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_update_post_currentUser(self):
+
         self.post_valid_update2 = {
 
             "author": "",
             "title": "maroon5",
             "content": "No Url",
             "category": [
-                1,
+                self.category_name,
             ]
         }
         response = self.client.put(reverse('post_details', kwargs={'pk': self.post.id}),

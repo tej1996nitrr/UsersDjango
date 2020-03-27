@@ -1,13 +1,9 @@
-from django.test import TestCase
-from rest_framework.test import APITestCase
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.authtoken.models import Token
 from rest_framework.test import APITestCase
 import json
-from .serializers import UserSerializer
 from .models import CustomUser
-from django.contrib.auth.models import User
 
 
 class RegistrationTestCase(APITestCase):
@@ -49,7 +45,8 @@ class RegistrationTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_registration_existing_username(self):
-        self.user = CustomUser.objects.create_user(username="holmes",email="holmes@gmail.com", password="some-very-strong-psw")
+        self.user = CustomUser.objects.create_user(username="holmes", email="holmes@gmail.com",
+                                                   password="some-very-strong-psw")
         data = {"username": "holmes", "email": "holmes@localhost.app",
                 "password1": "BakersStreet", "password2": "BakersStreet"}
         response = self.client.post("/api/rest-auth/registration/", data)
@@ -64,14 +61,12 @@ class RegistrationTestCase(APITestCase):
 
 
 class ProfileTestCase(APITestCase):
-
     """Creating test cases for profiles"""
     list_url = reverse("customuser-list")  # created automatically by router based on queryset
 
     def setUp(self):
-
-        self.user = CustomUser.objects.create(username="batman",email="batman@gmail.com",
-                                             password="aqwertmdffewq")
+        self.user = CustomUser.objects.create(username="batman", email="batman@gmail.com",
+                                              password="aqwertmdffewq")
         self.token = Token.objects.get(user=self.user)
         self.api_authentication()
 
@@ -94,17 +89,18 @@ class ProfileTestCase(APITestCase):
         self.assertEqual(response.data["username"], "batman")
 
     def test_profile_update_by_owner(self):
-
         response = self.client.put(reverse("customuser-detail", kwargs={"pk": 1}),
-                                   {"username":"batman","email":"batman@gmail.com","city": "Hyd", "bio": "Renaissance Genius"})
+                                   {"username": "batman", "email": "batman@gmail.com", "city": "Hyd",
+                                    "bio": "Renaissance Genius"})
 
         self.assertEqual(json.loads(response.content),
                          {"id": 1, "username": "batman", "bio": "Renaissance Genius",
-                          "city": "Hyd", "profile_pic": None, 'posts': [],'date_of_birth': None,'email': 'batman@gmail.com'})
+                          "city": "Hyd", "profile_pic": None, 'posts': [], 'date_of_birth': None,
+                          'email': 'batman@gmail.com'})
 
     def test_profile_update_by_random_user(self):
-        random_user = CustomUser.objects.create_user(username="random",email="random@gmail.com",
-                                               password="psw123123123")
+        random_user = CustomUser.objects.create_user(username="random", email="random@gmail.com",
+                                                     password="psw123123123")
         self.client.force_authenticate(user=random_user)
         response = self.client.put(reverse("customuser-detail", kwargs={"pk": 1}),
                                    {"bio": "hacked!!!"})

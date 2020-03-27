@@ -4,16 +4,14 @@ from django.utils.translation import ugettext_lazy as _
 
 class CustomUserManager(BaseUserManager):
     """
-    Custom user model manager where email is the unique identifiers
-    for authentication instead of usernames.
+    Custom user model manager
     """
-    def create_user(self, email,username, password, **extra_fields):
+    def create_user(self, email, username, password, **extra_fields):
         """
         Create and save a User with the given uname and password.
         """
         if not username:
             raise ValueError(_('The username must be set'))
-        # email = self.normalize_email(email)
         user = self.model(username=username, **extra_fields)
         user.set_password(password)
         user.save()

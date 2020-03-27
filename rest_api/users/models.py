@@ -4,14 +4,11 @@ from django.db import models
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.utils.translation import ugettext_lazy as _
-
 from .managers import CustomUserManager
 from django.dispatch import receiver
 from django.db.models.signals import post_save
 from rest_framework.authtoken.models import Token
-# # from django.contrib.auth import get_user_model
 from django.conf import settings
-# User = settings
 
 
 class CustomUser(AbstractUser):
