@@ -59,7 +59,7 @@ class RegistrationTestCase(APITestCase):
         data = {"username": "holmes", "email": "holmes@localhost.app",
                 "password1": "BakersStreet", "password2": "BakersStreet"}
         response = self.client.post("/api/rest-auth/registration/", data)
-        print(response.data)
+        # print(response.data)
         self.assertTrue('key' in response.data)
 
 
@@ -76,7 +76,7 @@ class ProfileTestCase(APITestCase):
         self.api_authentication()
 
     def api_authentication(self):
-        print("hello")
+        # print("hello")
         self.client.credentials(HTTP_AUTHORIZATION="Token " + self.token.key)
 
     def test_profile_list_authenticated(self):
