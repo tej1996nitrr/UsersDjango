@@ -48,20 +48,20 @@ class DetailsPostView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (IsOwner,)
 
 
-class UserView(generics.ListAPIView):
-    """View to list the user queryset."""
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-
-
-class UserDetailsView(generics.RetrieveAPIView):
-    """View to retrieve a user instance."""
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-
-
-class UserMeView(APIView):
-
-    def get(self, request):
-        serializer = UserSerializer(request.user)
-        return Response(serializer.data)
+# class UserView(generics.ListAPIView):
+#     """View to list the user queryset."""
+#     queryset = User.objects.all()
+#     serializer_class = UserSerializer
+#
+#
+# class UserDetailsView(generics.RetrieveAPIView):
+#     """View to retrieve a user instance."""
+#     queryset = User.objects.all()
+#     serializer_class = UserSerializer
+#
+#
+# class UserMeView(APIView):
+#
+#     def get(self, request):
+#         serializer = UserSerializer(request.user)
+#         return Response(serializer.data)
