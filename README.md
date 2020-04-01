@@ -16,7 +16,7 @@ A Django Rest Framework application build for content sharing.
 2. djangorestframework = "3.11.0"
 3. django-allauth = "*"
 4. django-rest-auth = "*"
-5. coreapi = "==2.3.3"
+5. coreapi = "2.3.3"
 6. coverage = "5.0.4"
 python_version = "3.7"
 
