@@ -9,7 +9,7 @@ A Django Rest Framework application build for content sharing.
 4. Create User profile (profile picture, bio, city etc.)
 5. View other users' profile and their posts.
 6. Object level permissions
-7.Classification of each post based on categories.
+7. Classification of each post based on categories.
 
 # Requirements:
 1. django = "3.0"
@@ -17,10 +17,14 @@ A Django Rest Framework application build for content sharing.
 3. django-allauth = "*"
 4. django-rest-auth = "*"
 5. coreapi = "==2.3.3"
-6. pyyaml = "==5.1.2"
-7. coverage = "5.0.4"
+6. coverage = "5.0.4"
 python_version = "3.7"
 
+# Details about apps:
+1. The 'api' app in the 'rest_api' project is about the posts and their categories. It defines the relationship of each post to the user and a category. 
+2. In the 'users' app we have created the custom user and it defines the user with its profile(like DOB, city, profile_pic etc.)
+3. The default sqlite database is used for storing all the entries.
+4. The docs folder contains the screenshots of the test coverage and results from running the application.
 
 # API Documentation:
 Docs at: http://127.0.0.1:8000/docs/
@@ -38,7 +42,7 @@ Docs at: http://127.0.0.1:8000/docs/
 12. Delete profile DELETE http://127.0.0.1:8000//users/profiles/{id}/
 
 # Screenshots:
-https://github.com/tej1996nitrr/UsersDjango/tree/UsersBranch/Screenshots
+https://github.com/tej1996nitrr/UsersDjango/tree/UsersBranch/docs
 
 # Test Coverage:
 
@@ -48,7 +52,7 @@ To run coverage using local terminal:
 2. coverage run  manage.py test
 3. coverage report
 
-https://github.com/tej1996nitrr/UsersDjango/blob/UsersBranch/Test%20Coverage.png
+https://github.com/tej1996nitrr/UsersDjango/blob/UsersBranch/docs/Test%20Coverage.png
 
 # Project branches:
 1. Master-> contains basic Posts app
