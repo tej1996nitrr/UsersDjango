@@ -11,7 +11,7 @@ djangorestframework = "*"
 django-allauth = "*"
 django-rest-auth = "*"
 coreapi = "==2.3.3"
-pyyaml = "==5.1.2"
+pyyaml = "==5.4"
 coverage = "*"
 
 [requires]
